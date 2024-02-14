@@ -4,6 +4,7 @@
 #include <string>
 #include "api.h"
 
+//basic utility class to be able to abstract a little of the code for the 
 class AutonSelector 
 {
 public:

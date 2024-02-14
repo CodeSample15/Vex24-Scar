@@ -10,8 +10,12 @@
 #include <iostream> // for debugging
 
 //autons:
-//#include "autons/AWPRight.cpp"
-//#include "autons/Skills.cpp"
+#if ORANGE_BOT
+	#include "autons/AWPRight_Orange.cpp"
+	#include "autons/Skills_Orange.cpp"
+#else
+	#include "autons/AWPRight_Red.cpp"
+#endif
 
 using namespace pros;
 
@@ -39,8 +43,15 @@ void select_auton_thread() {
 	selectingAuton = true;
 
 	//add the autons to the selector
-	selector.add("Right Side AWP", "Push in preload", "score blue+hang");
-	selector.add("Skills");
+	#if ORANGE_BOT
+		//orange bot autons
+		selector.add("AWP");
+		selector.add("Skills");
+	#else
+		//red bot autons
+	#endif
+
+
 	bool updateScreen = true;
 
 	master.clear();
@@ -86,16 +97,33 @@ void competition_initialize() {
 	imu.tare_rotation();
 	static_imu.tare();
 
-	master.clear();
-	delay(60);
-	master.set_text(0, 0, "Armed");
-
 	//start auton selection thread
 	Task t(select_auton_thread);
 }
 
 void autonomous() {
 	selectingAuton = false; //kill auton selection thread
+
+	#if ORANGE_BOT
+	//orange bot autons
+	switch(selector.getSelected()) {
+		case 0:
+			runRightAwpAuton();
+			break;
+
+		case 1:
+			run_skills();
+			break;
+
+		default:
+			std::cout << "Auton not found" << std::endl;
+			break;
+	}
+
+	#else
+	//red bot autons
+
+	#endif
 }
 
 void opcontrol() {

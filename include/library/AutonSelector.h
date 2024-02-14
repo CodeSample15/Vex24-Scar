@@ -13,9 +13,7 @@ public:
 
   void display_autons();
   void iterate(); //called when a user presses a button to change the auton selection by 1
-  void add(std::string name, std::string description, std::string description2);
-  void add(std::string name, std::string description);
-  void add(std::string name);
+  void add(std::string name, std::string description="", std::string description2="");
 
   int getSelected();
 

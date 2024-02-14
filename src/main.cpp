@@ -40,6 +40,7 @@ void select_auton_thread() {
 
 	//add the autons to the selector
 	selector.add("Right Side AWP", "Push in preload", "score blue+hang");
+	selector.add("Skills");
 	bool updateScreen = true;
 
 	master.clear();

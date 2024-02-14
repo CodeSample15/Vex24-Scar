@@ -48,31 +48,6 @@ void AutonSelector::add(std::string name, std::string description, std::string d
   AutonSelector::descriptions.push_back(stringVector);
 }
 
-//overloads if there isn't a long descriptions or no description at all:
-void AutonSelector::add(std::string name, std::string description)
-{
-  AutonSelector::numberOfAutons++;
-
-  AutonSelector::autons.push_back(name);
-
-  std::vector<std::string> stringVector;
-  stringVector.push_back(description);
-  stringVector.push_back("");
-  AutonSelector::descriptions.push_back(stringVector);
-}
-
-void AutonSelector::add(std::string name)
-{
-  AutonSelector::numberOfAutons++;
-
-  AutonSelector::autons.push_back(name);
-
-  std::vector<std::string> stringVector;
-  stringVector.push_back("");
-  stringVector.push_back("");
-  AutonSelector::descriptions.push_back(stringVector);
-}
-
 //change the current selected auton and give haptic feedback to the driver
 void AutonSelector::iterate() 
 {

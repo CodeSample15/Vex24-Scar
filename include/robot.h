@@ -2,7 +2,7 @@
 #pragma once
 
 //what are we compiling to?
-#define ORANGE_BOT false //false for red bot
+#define ORANGE_BOT true //false for red bot
 
 #include "api.h"
 #include "library/ChassisController.h"

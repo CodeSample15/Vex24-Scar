@@ -87,10 +87,10 @@ void AutonSelector::iterate()
 //display the current auton on the remote screen
 void AutonSelector::display_autons() 
 {
-  master.set_text(0, 0, AutonSelector::autons[AutonSelector::selected].c_str());
+  master.print(0, 0, "%s", AutonSelector::autons[AutonSelector::selected].c_str());
   pros::delay(60);
-  master.set_text(1, 0, AutonSelector::descriptions[AutonSelector::selected][0].c_str());
+  master.print(1, 0, "%s", AutonSelector::descriptions[AutonSelector::selected][0].c_str());
   pros::delay(60);
-  master.set_text(2, 0, AutonSelector::descriptions[AutonSelector::selected][1].c_str());
+  master.print(2, 0, "%s", AutonSelector::descriptions[AutonSelector::selected][1].c_str());
   pros::delay(60);
 }

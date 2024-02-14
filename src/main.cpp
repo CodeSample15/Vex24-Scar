@@ -16,6 +16,8 @@
 using namespace pros;
 
 bool initializing = false;
+bool selectingAuton = false;
+AutonSelector selector;
 
 void print_debug() {
 	lcd::initialize();
@@ -30,6 +32,36 @@ void print_debug() {
 	}
 }
 
+void select_auton_thread() {
+	if(selectingAuton)
+		return; //no duplicate threads please
+
+	selectingAuton = true;
+
+	//add the autons to the selector
+	selector.add("Right Side AWP", "Push in preload", "score blue+hang");
+	bool updateScreen = true;
+
+	master.clear();
+	delay(60);
+
+	//Allow the user to select an auton
+	while(selectingAuton) {
+		if(updateScreen) {
+			selector.display_autons(); //update screen
+			updateScreen = false;
+		}
+
+		if(master.get_digital_new_press(E_CONTROLLER_DIGITAL_UP)) {
+			selector.iterate();
+			updateScreen = true;
+			std::cout << "pressed" << std::endl;
+		}
+
+		delay(10);
+  	}
+}
+
 void initialize() {	
 	IntakeMotor.set_brake_mode(E_MOTOR_BRAKE_HOLD);
 	climbMotor.set_brake_mode(E_MOTOR_BRAKE_HOLD);
@@ -41,29 +73,6 @@ void initialize() {
 void disabled() {}
 
 void competition_initialize() {
-	/*
-	//add the autons to the selector
-	selector.add("Right Side AWP", "Push in preload", "score blue+hang");
-	bool updateScreen = false;
-
-	master.clear();
-
-	//Allow the user to select an auton
-	while(true) {
-		if(updateScreen) {
-			selector.display_autons(); //update screen
-			updateScreen = false;
-		}
-
-		if(master.get_digital_new_press(E_CONTROLLER_DIGITAL_UP)) {
-			selector.iterate();
-			updateScreen = true;
-		}
-
-		delay(10);
-  	}
-	*/
-
 	//calibrate imu (blocking)
 	master.clear();
 	delay(60);
@@ -79,9 +88,13 @@ void competition_initialize() {
 	master.clear();
 	delay(60);
 	master.set_text(0, 0, "Armed");
+
+	//start auton selection thread
+	Task t(select_auton_thread);
 }
 
 void autonomous() {
+	selectingAuton = false; //kill auton selection thread
 }
 
 void opcontrol() {
@@ -90,7 +103,7 @@ void opcontrol() {
 	rightMotors.set_brake_modes(E_MOTOR_BRAKE_COAST);
 	leftMotors.set_brake_modes(E_MOTOR_BRAKE_COAST);
 
-	while(true) {
+	while(!selectingAuton) {
 		//driving
 		if(KYLE_DRIVING) {
 			double leftAmount = master.get_analog(E_CONTROLLER_ANALOG_LEFT_Y);
@@ -122,13 +135,14 @@ void opcontrol() {
 		}
 
 		//climber
+		#if ORANGE_BOT
 		if(master.get_digital(E_CONTROLLER_DIGITAL_UP))
 			climbMotor.move(-127);
 		else if(master.get_digital(E_CONTROLLER_DIGITAL_DOWN))
 			climbMotor.move(127);
 		else
 			climbMotor.brake();
-
+		#endif
 
 		delay(10);
 	}

@@ -43,7 +43,7 @@ pros::ADIDigitalOut backWings = pros::ADIDigitalOut(BACK_WINGS_PORT);
 
 #if ORANGE_BOT
     PID drivePid = PID(0.5, 0.02, 1.5, 20, 20, 3, 30);
-    PID turnPid = PID(1.4, 0.06, 0.85, 20, 15, 1, 20);
+    PID turnPid = PID(1.4, 0.06, 1.6, 20, 15, 1, 20);
 #else
     PID drivePid = PID(0.5, 0.02, 1.5, 20, 20, 3, 30);
     PID turnPid = PID(1.25, 0.02, 0.95, 20, 14, 2, 20);

@@ -114,7 +114,7 @@ void autonomous() {
 			break;
 
 		case 1:
-			run_skills();
+			BowlDownAlley();
 			break;
 
 		default:

@@ -94,14 +94,14 @@ void Chassis::MovePid(double distance, float speed_m, float slewrate, bool inert
 
     while(std::abs(distance-getAveragePosition(true)) > 6 || std::abs(averageMotorSpeed)>1) {
         double s = pid.calculate(distance-getAveragePosition(true), false) * speed_m;
-        double t = inertialLock ? turnPid.calculate(gyro->get_rotation(), false)*5 : 0;
+        double t = inertialLock ? turnPid.calculate(gyro->get_rotation(), false)*6 : 0;
 
         if(std::abs(s) < 3)
             break; //too slow to move, just stop it, get some help
 
-        if(slewrate>0 && slew<s) {
+        if(slewrate>0 && std::abs(slew)<std::abs(s)) {
             s = slew;
-            slew += slewrate;
+            slew += slewrate * (distance<0 ? -1 : 1);
         }
 
         right->move(s + t);
@@ -136,7 +136,7 @@ void Chassis::Move(double distance, int speed, float slewrate, int timeout, bool
         }
 
         int s = speed * (distance<0?-1:1);
-        int t = inertialLock ? turnPid.calculate(gyro->get_rotation(), false) : 0; 
+        int t = inertialLock ? turnPid.calculate(gyro->get_rotation(), false)*6 : 0; 
 
         if(slewrate>0 && slew<s) {
             s = (int)slew;

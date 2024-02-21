@@ -13,6 +13,7 @@
 #if ORANGE_BOT
 	#include "autons/AWPRight_Orange.cpp"
 	#include "autons/Skills_Orange.cpp"
+	#include "autons/Bowl_Orange.cpp"
 #else
 	#include "autons/AWPRight_Red.cpp"
 #endif
@@ -46,9 +47,10 @@ void select_auton_thread() {
 	#if ORANGE_BOT
 		//orange bot autons
 		selector.add("AWP");
-		selector.add("Skills");
+		selector.add("Bowl down", "alley", "(5x)");
 	#else
 		//red bot autons
+		selector.add("AWP");
 	#endif
 
 
@@ -122,7 +124,15 @@ void autonomous() {
 
 	#else
 	//red bot autons
+	switch(selector.getSelected()) {
+		case 0:
+			runRightAwpAuton();
+			break;
 
+		default:
+			std::cout << "Auton not found" << std::endl;
+			break;
+	}
 	#endif
 }
 

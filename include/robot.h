@@ -2,7 +2,7 @@
 #pragma once
 
 //what are we compiling to?
-#define ORANGE_BOT true //false for red bot
+#define ORANGE_BOT false //false for red bot
 
 #include "api.h"
 #include "library/ChassisController.h"
@@ -30,20 +30,22 @@
     #define FRONT_WINGS_PORT 'A'
     #define BACK_WINGS_PORT 'B'
 #else
-    #define RIGHT_MOTOR_1_PORT 12
-    #define RIGHT_MOTOR_2_PORT 14
-    #define RIGHT_MOTOR_3_PORT 16
-    #define RIGHT_MOTOR_4_PORT 17
+    #define RIGHT_MOTOR_1_PORT 16
+    #define RIGHT_MOTOR_2_PORT 17
+    #define RIGHT_MOTOR_3_PORT 18
+    #define RIGHT_MOTOR_4_PORT 19
 
     #define INERTIAL_PORT 19
-    #define STATIC_INERTIAL_PORT 10
+    #define STATIC_INERTIAL_PORT 20
 
-    #define INTAKE_PORT 20
+    #define INTAKE_PORT 10
 
     #define LEFT_MOTOR_1_PORT 11
-    #define LEFT_MOTOR_2_PORT 13
-    #define LEFT_MOTOR_3_PORT 15
-    #define LEFT_MOTOR_4_PORT 18
+    #define LEFT_MOTOR_2_PORT 12
+    #define LEFT_MOTOR_3_PORT 13
+    #define LEFT_MOTOR_4_PORT 14
+
+    #define SLAPPER_MOTOR_PORT 21
 
     #define FRONT_WINGS_PORT 'A'
     #define BACK_WINGS_PORT 'B'
@@ -63,11 +65,14 @@ extern pros::Motor leftMotor3;
 extern pros::Motor leftMotor4;
 
 extern pros::Motor IntakeMotor;
+extern pros::Motor SlapperMotor;
 
 extern pros::Motor_Group leftMotors;
 extern pros::Motor_Group rightMotors;
 
-extern pros::Motor climbMotor;
+#if ORANGE_BOT
+    extern pros::Motor climbMotor;
+#endif
 
 extern pros::Imu imu;
 extern pros::Imu static_imu;

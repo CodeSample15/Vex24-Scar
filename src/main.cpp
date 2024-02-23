@@ -26,7 +26,7 @@ AutonSelector selector;
 
 void print_debug() {
 	lcd::initialize();
-
+	#if ORANGE_BOT
 	while(true) {
 		lcd::set_text(1, "Climber position: " + std::to_string(climbMotor.get_position()));
 		lcd::set_text(2, "Static imu: " + std::to_string(static_imu.get_rotation()));
@@ -35,6 +35,7 @@ void print_debug() {
 
 		lcd::clear();
 	}
+	#endif
 }
 
 void select_auton_thread() {
@@ -77,9 +78,14 @@ void select_auton_thread() {
 }
 
 void initialize() {	
-	IntakeMotor.set_brake_mode(E_MOTOR_BRAKE_HOLD);
+
+	IntakeMotor.set_brake_mode(E_MOTOR_BRAKE_COAST);
+
+	#if ORANGE_BOT
+
 	climbMotor.set_brake_mode(E_MOTOR_BRAKE_HOLD);
 	climbMotor.tare_position();
+	#endif
 
 	Task t(print_debug);
 }
@@ -172,6 +178,12 @@ void opcontrol() {
 			backWingsDeployed = !backWingsDeployed;
 			backWings.set_value(backWingsDeployed);
 		}
+
+		//slapper
+		if(master.get_digital(E_CONTROLLER_DIGITAL_X))
+			SlapperMotor.move(127);
+		else
+			SlapperMotor.brake();
 
 		//climber
 		#if ORANGE_BOT

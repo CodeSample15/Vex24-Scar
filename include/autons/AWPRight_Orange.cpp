@@ -44,9 +44,11 @@ inline void runRightAwpAuton() {
     driveChassis.TurnPid(45-static_imu.get_rotation(), 1);
     
     //start raising hang bar
+    #if ORANGE_BOT
     pros::Task([]() {
         climbMotor.move_absolute(4200, 300);
     });
+    #endif
 
     //drive to align with hanging bar
     driveChassis.MovePid(900, 1, 4, true);

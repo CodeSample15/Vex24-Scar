@@ -30,6 +30,7 @@ void print_debug() {
 	while(true) {
 		lcd::set_text(1, "Climber position: " + std::to_string(climbMotor.get_position()));
 		lcd::set_text(2, "Static imu: " + std::to_string(static_imu.get_rotation()));
+		lcd::set_text(3, "Slapper pos: " + std::to_string(SlapperMotor.get_position()));
 
 		delay(10);
 
@@ -80,9 +81,9 @@ void select_auton_thread() {
 void initialize() {	
 
 	IntakeMotor.set_brake_mode(E_MOTOR_BRAKE_COAST);
+	SlapperMotor.set_gearing(E_MOTOR_GEAR_200);
 
 	#if ORANGE_BOT
-
 	climbMotor.set_brake_mode(E_MOTOR_BRAKE_HOLD);
 	climbMotor.tare_position();
 	#endif
@@ -144,7 +145,8 @@ void autonomous() {
 
 void opcontrol() {
 	bool frontWingsDeployed = false;
-	bool backWingsDeployed = false;
+	bool leftBackWingsDeployed = false;
+	bool rightBackWingsDeployed = false;
 	rightMotors.set_brake_modes(E_MOTOR_BRAKE_COAST);
 	leftMotors.set_brake_modes(E_MOTOR_BRAKE_COAST);
 
@@ -170,13 +172,19 @@ void opcontrol() {
 			IntakeMotor.brake();
 
 		//wings
+		#if ORANGE_BOT
 		if(master.get_digital_new_press(E_CONTROLLER_DIGITAL_L1)) {
 			frontWingsDeployed = !frontWingsDeployed;
 			frontWings.set_value(frontWingsDeployed);
 		}
-		if(master.get_digital_new_press(E_CONTROLLER_DIGITAL_L2)) {
-			backWingsDeployed = !backWingsDeployed;
-			backWings.set_value(backWingsDeployed);
+		#endif
+		if(master.get_digital_new_press(E_CONTROLLER_DIGITAL_LEFT)) {
+			leftBackWingsDeployed = !leftBackWingsDeployed;
+			leftBackWings.set_value(leftBackWingsDeployed);
+		}
+		if(master.get_digital_new_press(E_CONTROLLER_DIGITAL_RIGHT)) {
+			rightBackWingsDeployed = !rightBackWingsDeployed;
+			rightBackWings.set_value(rightBackWingsDeployed); 
 		}
 
 		//slapper

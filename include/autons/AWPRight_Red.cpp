@@ -45,7 +45,6 @@ inline void runRightAwpAuton() {
     //frontWingsOut();
     driveChassis.Move(800, 127, 6, 3000);
     driveChassis.MovePid(-400, 1, 4, true);
-    frontWingsIn();
     pros::delay(100);
 
     //turn backwards and move towards bar

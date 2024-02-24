@@ -27,8 +27,12 @@
 
     #define CLIMB_MOTOR_PORT 20
 
-    #define FRONT_WINGS_PORT 'A'
-    #define BACK_WINGS_PORT 'B'
+    #define SLAPPER_MOTOR_PORT 18
+
+    #define FRONT_WINGS_PORT 'C'
+
+    #define LEFT_BACK_WINGS_PORT 'B'
+    #define RIGHT_BACK_WINGS_PORT 'A'
 #else
     #define RIGHT_MOTOR_1_PORT 16
     #define RIGHT_MOTOR_2_PORT 17
@@ -47,8 +51,8 @@
 
     #define SLAPPER_MOTOR_PORT 21
 
-    #define FRONT_WINGS_PORT 'A'
-    #define BACK_WINGS_PORT 'B'
+    #define LEFT_BACK_WINGS_PORT 'G'
+    #define RIGHT_BACK_WINGS_PORT 'H'
 #endif
 
 
@@ -77,8 +81,12 @@ extern pros::Motor_Group rightMotors;
 extern pros::Imu imu;
 extern pros::Imu static_imu;
 
-extern pros::ADIDigitalOut frontWings;
-extern pros::ADIDigitalOut backWings;
+#if ORANGE_BOT
+    extern pros::ADIDigitalOut frontWings;
+#endif
+
+extern pros::ADIDigitalOut leftBackWings;
+extern pros::ADIDigitalOut rightBackWings;
 
 extern PID drivePid;
 extern PID turnPid;

@@ -2,20 +2,40 @@
 #include "api.h"
 #include "HelperMethods.h"
 
-void frontWingsOut() {
-    frontWings.set_value(1);
+#if ORANGE_BOT
+    void frontWingsOut() {
+        frontWings.set_value(1);
+    }
+
+    void frontWingsIn() {
+        frontWings.set_value(0);
+    }
+#endif
+
+void leftBackWingOut() {
+    leftBackWings.set_value(1);
 }
 
-void frontWingsIn() {
-    frontWings.set_value(0);
+void leftBackWingIn() {
+    leftBackWings.set_value(0);
 }
 
-void backWingsOut() {
-    backWings.set_value(1);
+void rightBackWingOut() {
+    rightBackWings.set_value(1);
+}
+
+void rightBackWingIn() {
+    rightBackWings.set_value(0);
 }
 
 void backWingsIn() {
-    backWings.set_value(0);
+    rightBackWings.set_value(0);
+    leftBackWings.set_value(0);
+}
+
+void backWingsOut() {
+    rightBackWings.set_value(1);
+    leftBackWings.set_value(1);
 }
 
 void startIntake(bool in) {

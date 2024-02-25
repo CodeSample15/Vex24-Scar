@@ -2,10 +2,10 @@
 #include "robot.h"
 #include "autons/HelperMethods.h"
 
-inline void run_skills() 
+inline void run_skills()
 {
-    leftBackWingOut();
-    static_imu.set_rotation(-145);
+    rightBackWingOut();
+    static_imu.set_rotation(145);
     pros::delay(200);
 
     int times = 25;
@@ -20,12 +20,13 @@ inline void run_skills()
         SlapperMotor.brake();
 
         if(i != times-1)
-            pros::delay(1500);
+            pros::delay(1200);
     }
 
-    driveChassis.TurnPid(-10, 2);
+    rightBackWingIn();
     driveChassis.MovePid(-900, 1, 3, true);
-    driveChassis.TurnPid(-180-static_imu.get_rotation(), 2);
+    rightBackWingOut();
+    driveChassis.TurnPid(180-static_imu.get_rotation(), 2);
 
     //FLOOR IT
     driveChassis.MovePid(-3100, 0.7, 2, true);

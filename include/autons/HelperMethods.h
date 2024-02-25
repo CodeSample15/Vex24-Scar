@@ -1,10 +1,8 @@
 #pragma once
 #include "robot.h"
 
-#if ORANGE_BOT
 void frontWingsOut();
 void frontWingsIn();
-#endif
 
 void leftBackWingOut();
 void leftBackWingIn();

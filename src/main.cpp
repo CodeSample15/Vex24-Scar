@@ -16,6 +16,7 @@
 	#include "autons/Bowl_Orange.cpp"
 #else
 	#include "autons/AWPRight_Red.cpp"
+	#include "autons/Skills_Red.cpp"
 #endif
 
 using namespace pros;
@@ -27,15 +28,24 @@ AutonSelector selector;
 void print_debug() {
 	lcd::initialize();
 	#if ORANGE_BOT
-	while(true) {
-		lcd::set_text(1, "Climber position: " + std::to_string(climbMotor.get_position()));
-		lcd::set_text(2, "Static imu: " + std::to_string(static_imu.get_rotation()));
-		lcd::set_text(3, "Slapper pos: " + std::to_string(SlapperMotor.get_position()));
+		while(true) {
+			lcd::set_text(1, "Climber position: " + std::to_string(climbMotor.get_position()));
+			lcd::set_text(2, "Static imu: " + std::to_string(static_imu.get_rotation()));
+			lcd::set_text(3, "Slapper pos: " + std::to_string(SlapperMotor.get_position()));
 
-		delay(10);
+			delay(10);
 
-		lcd::clear();
-	}
+			lcd::clear();
+		}
+	#else
+		while(true) {
+			lcd::set_text(1, "Static imu: " + std::to_string(static_imu.get_rotation()));
+			lcd::set_text(2, "Slapper pos: " + std::to_string(SlapperMotor.get_position()));
+
+			delay(10);
+
+			lcd::clear();
+		}
 	#endif
 }
 
@@ -49,10 +59,14 @@ void select_auton_thread() {
 	#if ORANGE_BOT
 		//orange bot autons
 		selector.add("AWP");
-		selector.add("Bowl down", "alley", "(5x)");
+		selector.add("Bowl down", "alley", "(10x)");
+		selector.add("Skills");
 	#else
 		//red bot autons
+		selector.add("Skills");
 		selector.add("AWP");
+		selector.add("AFK");
+		selector.add("Floor it", "(get to", "bar)");
 	#endif
 
 
@@ -79,9 +93,9 @@ void select_auton_thread() {
 }
 
 void initialize() {	
-
 	IntakeMotor.set_brake_mode(E_MOTOR_BRAKE_COAST);
 	SlapperMotor.set_gearing(E_MOTOR_GEAR_200);
+	SlapperMotor.set_brake_mode(E_MOTOR_BRAKE_BRAKE);
 
 	#if ORANGE_BOT
 	climbMotor.set_brake_mode(E_MOTOR_BRAKE_HOLD);
@@ -94,20 +108,22 @@ void initialize() {
 void disabled() {}
 
 void competition_initialize() {
-	//calibrate imu (blocking)
-	master.clear();
-	delay(60);
-	master.set_text(0, 0, "Calibrating...");
-	delay(60);
+	if(!selectingAuton) {
+		//calibrate imu (blocking)
+		master.clear();
+		delay(60);
+		master.set_text(0, 0, "Calibrating...");
+		delay(60);
 
-	imu.reset();
-	static_imu.reset();
-	delay(3000);
-	imu.tare_rotation();
-	static_imu.tare();
+		imu.reset();
+		static_imu.reset();
+		delay(3000);
+		imu.tare_rotation();
+		static_imu.tare();
 
-	//start auton selection thread
-	Task t(select_auton_thread);
+		//start auton selection thread
+		Task t(select_auton_thread);
+	}
 }
 
 void autonomous() {
@@ -124,6 +140,10 @@ void autonomous() {
 			BowlDownAlley();
 			break;
 
+		case 2:
+			run_skills();
+			break;
+
 		default:
 			std::cout << "Auton not found" << std::endl;
 			break;
@@ -133,7 +153,24 @@ void autonomous() {
 	//red bot autons
 	switch(selector.getSelected()) {
 		case 0:
+			run_skills();
+			break;
+
+		case 1:
 			runRightAwpAuton();
+			break;
+
+		case 2:
+			//afk
+			startIntake(false); //drop intake
+			delay(1500); //wait
+			stopIntake(); //no need wasting that valuable battery juice
+			break;
+
+		case 3:
+			//run to other side
+			startIntake(false);
+			driveChassis.MovePid(1500, 1, 4, true);
 			break;
 
 		default:
@@ -164,12 +201,22 @@ void opcontrol() {
 		}
 
 		//intake
-		if(master.get_digital(E_CONTROLLER_DIGITAL_R1))
-			IntakeMotor.move(127);
-		else if(master.get_digital(E_CONTROLLER_DIGITAL_R2))
-			IntakeMotor.move(-127);
-		else
-			IntakeMotor.brake();
+		#if ORANGE_BOT
+			if(master.get_digital(E_CONTROLLER_DIGITAL_R1))
+				IntakeMotor.move(127);
+			else if(master.get_digital(E_CONTROLLER_DIGITAL_R2))
+				IntakeMotor.move(-127);
+			else
+				IntakeMotor.brake();
+		#else
+			if(master.get_digital(E_CONTROLLER_DIGITAL_R1))
+				IntakeMotor.move(-127);
+			else if(master.get_digital(E_CONTROLLER_DIGITAL_R2))
+				IntakeMotor.move(127);
+			else
+				IntakeMotor.brake();
+		#endif
+
 
 		//wings
 		#if ORANGE_BOT
@@ -178,18 +225,18 @@ void opcontrol() {
 			frontWings.set_value(frontWingsDeployed);
 		}
 		#endif
-		if(master.get_digital_new_press(E_CONTROLLER_DIGITAL_LEFT)) {
+		if(master.get_digital_new_press(E_CONTROLLER_DIGITAL_Y)) {
 			leftBackWingsDeployed = !leftBackWingsDeployed;
 			leftBackWings.set_value(leftBackWingsDeployed);
 		}
-		if(master.get_digital_new_press(E_CONTROLLER_DIGITAL_RIGHT)) {
+		if(master.get_digital_new_press(E_CONTROLLER_DIGITAL_A)) {
 			rightBackWingsDeployed = !rightBackWingsDeployed;
 			rightBackWings.set_value(rightBackWingsDeployed); 
 		}
 
 		//slapper
 		if(master.get_digital(E_CONTROLLER_DIGITAL_X))
-			SlapperMotor.move(127);
+			SlapperMotor.move(110);
 		else
 			SlapperMotor.brake();
 

@@ -8,8 +8,11 @@ inline void runRightAwpAuton() {
     rightMotors.set_brake_modes(pros::E_MOTOR_BRAKE_BRAKE);
 	leftMotors.set_brake_modes(pros::E_MOTOR_BRAKE_BRAKE);
 
-    //pick up triball under bar while moving forward
+    //get out of legal starting size
     startIntake();
+    pros::delay(1100);
+
+    //pick up triball under bar while moving forward
     driveChassis.MovePid(2150, 0.6, 3, true);
 
     //turn to the side
@@ -39,7 +42,7 @@ inline void runRightAwpAuton() {
     //move back
     backWingsIn();
     driveChassis.MovePid(-600, 1, 5, true);
-    driveChassis.TurnPid(30, 1);
+    driveChassis.TurnPid(30, 2);
 
     //push triball in and move back out
     //frontWingsOut();

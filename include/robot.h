@@ -2,7 +2,7 @@
 #pragma once
 
 //what are we compiling to?
-#define ORANGE_BOT false //false for red bot
+#define ORANGE_BOT true //false for red bot
 
 #include "api.h"
 #include "library/ChassisController.h"
@@ -39,8 +39,8 @@
     #define RIGHT_MOTOR_3_PORT 18
     #define RIGHT_MOTOR_4_PORT 19
 
-    #define INERTIAL_PORT 19
-    #define STATIC_INERTIAL_PORT 20
+    #define INERTIAL_PORT 3
+    #define STATIC_INERTIAL_PORT 7
 
     #define INTAKE_PORT 10
 
@@ -49,7 +49,7 @@
     #define LEFT_MOTOR_3_PORT 13
     #define LEFT_MOTOR_4_PORT 14
 
-    #define SLAPPER_MOTOR_PORT 21
+    #define SLAPPER_MOTOR_PORT 1
 
     #define LEFT_BACK_WINGS_PORT 'G'
     #define RIGHT_BACK_WINGS_PORT 'H'

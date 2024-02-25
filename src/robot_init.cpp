@@ -15,6 +15,11 @@ pros::Controller master = pros::Controller(pros::E_CONTROLLER_MASTER);
     pros::Motor leftMotor2 = pros::Motor(LEFT_MOTOR_2_PORT);
     pros::Motor leftMotor3 = pros::Motor(LEFT_MOTOR_3_PORT, true);
     pros::Motor leftMotor4 = pros::Motor(LEFT_MOTOR_4_PORT);
+
+    pros::Motor climbMotor = pros::Motor(CLIMB_MOTOR_PORT);
+    pros::Motor SlapperMotor = pros::Motor(SLAPPER_MOTOR_PORT);
+
+    pros::ADIDigitalOut frontWings = pros::ADIDigitalOut(FRONT_WINGS_PORT);
 #else
     pros::Motor rightMotor1 = pros::Motor(RIGHT_MOTOR_1_PORT, true);
     pros::Motor rightMotor2 = pros::Motor(RIGHT_MOTOR_2_PORT);
@@ -25,24 +30,17 @@ pros::Controller master = pros::Controller(pros::E_CONTROLLER_MASTER);
     pros::Motor leftMotor2 = pros::Motor(LEFT_MOTOR_2_PORT);
     pros::Motor leftMotor3 = pros::Motor(LEFT_MOTOR_3_PORT, true);
     pros::Motor leftMotor4 = pros::Motor(LEFT_MOTOR_4_PORT);
+
+    pros::Motor SlapperMotor = pros::Motor(SLAPPER_MOTOR_PORT, true);
 #endif
 
 pros::Motor_Group leftMotors = pros::Motor_Group({leftMotor1, leftMotor2, leftMotor3, leftMotor4});
 pros::Motor_Group rightMotors = pros::Motor_Group({rightMotor1, rightMotor2, rightMotor3, rightMotor4});
 
 pros::Motor IntakeMotor = pros::Motor(INTAKE_PORT);
-#if ORANGE_BOT
-    pros::Motor climbMotor = pros::Motor(CLIMB_MOTOR_PORT);
-#endif
-
-pros::Motor SlapperMotor = pros::Motor(SLAPPER_MOTOR_PORT);
 
 pros::Imu imu = pros::Imu(INERTIAL_PORT);
 pros::Imu static_imu = pros::Imu(STATIC_INERTIAL_PORT);
-
-#if ORANGE_BOT
-    pros::ADIDigitalOut frontWings = pros::ADIDigitalOut(FRONT_WINGS_PORT);
-#endif
 
 pros::ADIDigitalOut leftBackWings = pros::ADIDigitalOut(LEFT_BACK_WINGS_PORT);
 pros::ADIDigitalOut rightBackWings = pros::ADIDigitalOut(RIGHT_BACK_WINGS_PORT);

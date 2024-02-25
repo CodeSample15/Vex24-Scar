@@ -2,15 +2,18 @@
 #include "api.h"
 #include "HelperMethods.h"
 
-#if ORANGE_BOT
-    void frontWingsOut() {
-        frontWings.set_value(1);
-    }
 
-    void frontWingsIn() {
-        frontWings.set_value(0);
-    }
-#endif
+void frontWingsOut() {
+    #if ORANGE_BOT
+    frontWings.set_value(1);
+    #endif
+}
+
+void frontWingsIn() {
+    #if ORANGE_BOT
+    frontWings.set_value(0);
+    #endif
+}
 
 void leftBackWingOut() {
     leftBackWings.set_value(1);

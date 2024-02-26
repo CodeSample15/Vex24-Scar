@@ -178,7 +178,7 @@ void Chassis::TurnPid(int degrees, float speed_m, int disable) {
 void Chassis::Turn(int degrees, int speed, int disable) {
     gyro->tare_rotation();
 
-    while(std::abs(degrees - gyro->get_rotation()) > 3) {
+    while(std::abs(gyro->get_rotation()) < std::abs(degrees)) {
         double s = speed * (degrees<0?-1:1);
 
         if(disable != 1)

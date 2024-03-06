@@ -1,5 +1,5 @@
 #define KYLE_DRIVING false
-#define TESTING true //NEVER DOWNLOAD CODE WITH THIS SET TO TRUE. BLOCKS CODE FROM RUNNING TO RUN TEST CODE
+#define TESTING false //NEVER DOWNLOAD CODE WITH THIS SET TO TRUE. BLOCKS CODE FROM RUNNING TO RUN TEST CODE
 
 #include "main.h"
 #include "pros/misc.h"
@@ -189,8 +189,8 @@ void opcontrol() {
 		imu.tare_rotation();
 		static_imu.tare();
 
-		driveChassis.MovePid(1000, 1, 7, true);
-		driveChassis.MovePid(-1000, 1, 7, true);
+		driveChassis.MovePid(2000, 1, 7, true);
+		driveChassis.MovePid(-2000, 1, 7, true);
 	}
 
 	bool frontWingsDeployed = false;
@@ -213,12 +213,21 @@ void opcontrol() {
 		}
 
 		//intake
+		#if ORANGE_BOT
 		if(master.get_digital(E_CONTROLLER_DIGITAL_R1))
 			IntakeMotor.move(127);
 		else if(master.get_digital(E_CONTROLLER_DIGITAL_R2))
 			IntakeMotor.move(-127);
 		else
 			IntakeMotor.brake();
+		#else
+		if(master.get_digital(E_CONTROLLER_DIGITAL_R1))
+			IntakeMotor.move(-127);
+		else if(master.get_digital(E_CONTROLLER_DIGITAL_R2))
+			IntakeMotor.move(127);
+		else
+			IntakeMotor.brake();
+		#endif
 
 		//wings
 		#if ORANGE_BOT

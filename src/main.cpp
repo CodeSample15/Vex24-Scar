@@ -207,22 +207,12 @@ void opcontrol() {
 		}
 
 		//intake
-		#if ORANGE_BOT
-			if(master.get_digital(E_CONTROLLER_DIGITAL_R1))
-				IntakeMotor.move(127);
-			else if(master.get_digital(E_CONTROLLER_DIGITAL_R2))
-				IntakeMotor.move(-127);
-			else
-				IntakeMotor.brake();
-		#else
-			if(master.get_digital(E_CONTROLLER_DIGITAL_R1))
-				IntakeMotor.move(-127);
-			else if(master.get_digital(E_CONTROLLER_DIGITAL_R2))
-				IntakeMotor.move(127);
-			else
-				IntakeMotor.brake();
-		#endif
-
+		if(master.get_digital(E_CONTROLLER_DIGITAL_R1))
+			IntakeMotor.move(127);
+		else if(master.get_digital(E_CONTROLLER_DIGITAL_R2))
+			IntakeMotor.move(-127);
+		else
+			IntakeMotor.brake();
 
 		//wings
 		#if ORANGE_BOT
@@ -231,6 +221,7 @@ void opcontrol() {
 			frontWings.set_value(frontWingsDeployed);
 		}
 		#endif
+		
 		if(master.get_digital_new_press(E_CONTROLLER_DIGITAL_Y)) {
 			leftBackWingsDeployed = !leftBackWingsDeployed;
 			leftBackWings.set_value(leftBackWingsDeployed);
@@ -246,10 +237,12 @@ void opcontrol() {
 		else
 			LeftSlapperMotor.brake();
 		
+		#if !ORANGE_BOT
 		if(master.get_digital(E_CONTROLLER_DIGITAL_B))
 			RightSlapperMotor.move(110);
 		else
 			RightSlapperMotor.brake();
+		#endif
 
 		//climber
 		if(master.get_digital(E_CONTROLLER_DIGITAL_UP))

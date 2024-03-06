@@ -28,7 +28,8 @@
 
     #define CLIMB_MOTOR_PORT 20
 
-    #define SLAPPER_MOTOR_PORT 18
+    #define LEFT_SLAPPER_MOTOR_PORT 18
+    #define LEFT_SLAPPER_SENSOR 10 //PLACEHOLDER: CHANGE
 
     #define FRONT_WINGS_PORT 'C'
 
@@ -53,10 +54,10 @@
     #define CLIMB_MOTOR_PORT 20
 
     #define RIGHT_SLAPPER_MOTOR_PORT 5
-    #define LEFT_SLAPPER_MOTOR_PORT 6
-
-    #define LEFT_SLAPPER_SENSOR_PORT 19
     #define RIGHT_SLAPPER_SENSOR_PORT 14
+
+    #define LEFT_SLAPPER_MOTOR_PORT 6
+    #define LEFT_SLAPPER_SENSOR_PORT 19
 
     #define LEFT_BACK_WINGS_PORT 'B'
     #define RIGHT_BACK_WINGS_PORT 'A'
@@ -78,9 +79,12 @@ extern pros::Motor leftMotor4;
 extern pros::Motor IntakeMotor;
 
 extern pros::Motor LeftSlapperMotor;
-extern pros::Motor RightSlapperMotor;
 extern pros::Rotation LeftSlapperSensor;
+
+#if !ORANGE_BOT
+extern pros::Motor RightSlapperMotor;
 extern pros::Rotation RightSlapperSensor;
+#endif
 
 extern pros::Motor_Group leftMotors;
 extern pros::Motor_Group rightMotors;

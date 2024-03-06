@@ -1,4 +1,5 @@
 #define KYLE_DRIVING false
+#define TESTING false //NEVER DOWNLOAD CODE WITH THIS SET TO TRUE. BLOCKS CODE FROM RUNNING TO RUN TEST CODE
 
 #include "main.h"
 #include "pros/misc.h"
@@ -181,6 +182,11 @@ void autonomous() {
 }
 
 void opcontrol() {
+	if(TESTING) {
+		driveChassis.MovePid(1000, 1, 7, true);
+		driveChassis.MovePid(-1000, 1, 7, true);
+	}
+
 	bool frontWingsDeployed = false;
 	bool leftBackWingsDeployed = false;
 	bool rightBackWingsDeployed = false;

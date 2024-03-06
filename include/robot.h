@@ -58,8 +58,8 @@
     #define LEFT_SLAPPER_SENSOR_PORT 19
     #define RIGHT_SLAPPER_SENSOR_PORT 14
 
-    #define LEFT_BACK_WINGS_PORT 'A'
-    #define RIGHT_BACK_WINGS_PORT 'B'
+    #define LEFT_BACK_WINGS_PORT 'B'
+    #define RIGHT_BACK_WINGS_PORT 'A'
 #endif
 
 

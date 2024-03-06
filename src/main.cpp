@@ -40,7 +40,6 @@ void print_debug() {
 	#else
 		while(true) {
 			lcd::set_text(1, "Static imu: " + std::to_string(static_imu.get_rotation()));
-			lcd::set_text(2, "Slapper pos: " + std::to_string(SlapperMotor.get_position()));
 
 			delay(10);
 
@@ -94,13 +93,14 @@ void select_auton_thread() {
 
 void initialize() {	
 	IntakeMotor.set_brake_mode(E_MOTOR_BRAKE_COAST);
-	SlapperMotor.set_gearing(E_MOTOR_GEAR_200);
-	SlapperMotor.set_brake_mode(E_MOTOR_BRAKE_BRAKE);
 
-	#if ORANGE_BOT
+	LeftSlapperMotor.set_gearing(E_MOTOR_GEAR_200);
+	LeftSlapperMotor.set_brake_mode(E_MOTOR_BRAKE_BRAKE);
+	RightSlapperMotor.set_gearing(E_MOTOR_GEAR_200);
+	RightSlapperMotor.set_brake_mode(E_MOTOR_BRAKE_BRAKE);
+
 	climbMotor.set_brake_mode(E_MOTOR_BRAKE_HOLD);
 	climbMotor.tare_position();
-	#endif
 
 	Task t(print_debug);
 }
@@ -234,21 +234,24 @@ void opcontrol() {
 			rightBackWings.set_value(rightBackWingsDeployed); 
 		}
 
-		//slapper
+		//slappers
 		if(master.get_digital(E_CONTROLLER_DIGITAL_X))
-			SlapperMotor.move(110);
+			LeftSlapperMotor.move(110);
 		else
-			SlapperMotor.brake();
+			LeftSlapperMotor.brake();
+		
+		if(master.get_digital(E_CONTROLLER_DIGITAL_B))
+			RightSlapperMotor.move(110);
+		else
+			RightSlapperMotor.brake();
 
 		//climber
-		#if ORANGE_BOT
 		if(master.get_digital(E_CONTROLLER_DIGITAL_UP))
 			climbMotor.move(-127);
 		else if(master.get_digital(E_CONTROLLER_DIGITAL_DOWN))
 			climbMotor.move(127);
 		else
 			climbMotor.brake();
-		#endif
 
 		delay(10);
 	}

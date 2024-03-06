@@ -10,14 +10,14 @@ inline void run_skills()
 
     int times = 25;
     for(int i=0; i<times; i++) {
-        SlapperMotor.tare_position();
+        LeftSlapperMotor.tare_position();
 
-        while(SlapperMotor.get_position() < 820) {
-            SlapperMotor.move(100);
+        while(LeftSlapperMotor.get_position() < 820) {
+            LeftSlapperMotor.move(100);
             pros::delay(10);
         }
 
-        SlapperMotor.brake();
+        LeftSlapperMotor.brake();
 
         if(i != times-1)
             pros::delay(1500);

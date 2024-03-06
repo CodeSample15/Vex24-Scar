@@ -41,8 +41,8 @@
     #define RIGHT_MOTOR_3_PORT 2
     #define RIGHT_MOTOR_4_PORT 1
 
-    #define INERTIAL_PORT 3
-    #define STATIC_INERTIAL_PORT 7
+    #define INERTIAL_PORT 18
+    #define STATIC_INERTIAL_PORT 13
 
     #define INTAKE_PORT 11
 

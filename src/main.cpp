@@ -1,5 +1,5 @@
 #define KYLE_DRIVING false
-#define TESTING false //NEVER DOWNLOAD CODE WITH THIS SET TO TRUE. BLOCKS CODE FROM RUNNING TO RUN TEST CODE
+#define TESTING true //NEVER DOWNLOAD CODE WITH THIS SET TO TRUE. BLOCKS CODE FROM RUNNING TO RUN TEST CODE
 
 #include "main.h"
 #include "pros/misc.h"
@@ -183,6 +183,12 @@ void autonomous() {
 
 void opcontrol() {
 	if(TESTING) {
+		imu.reset();
+		static_imu.reset();
+		delay(3000);
+		imu.tare_rotation();
+		static_imu.tare();
+
 		driveChassis.MovePid(1000, 1, 7, true);
 		driveChassis.MovePid(-1000, 1, 7, true);
 	}
@@ -221,7 +227,7 @@ void opcontrol() {
 			frontWings.set_value(frontWingsDeployed);
 		}
 		#endif
-		
+
 		if(master.get_digital_new_press(E_CONTROLLER_DIGITAL_Y)) {
 			leftBackWingsDeployed = !leftBackWingsDeployed;
 			leftBackWings.set_value(leftBackWingsDeployed);

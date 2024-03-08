@@ -97,7 +97,7 @@ void Chassis::MovePid(double distance, float speed_m, float slewrate, bool inert
     if(inertialLock)
         gyro->tare();
 
-    while(std::abs(distance) > std::abs(getAveragePosition(true)) || std::abs(averageMotorSpeed)>1) {
+    while(std::abs(distance-getAveragePosition(true)) > 5 || std::abs(averageMotorSpeed)>1) {
         double s = pid.calculate(distance-getAveragePosition(true));
         double t = inertialLock ? turnPid.calculate(gyro->get_rotation(), false) : 0;
 
@@ -171,7 +171,7 @@ void Chassis::TurnPid(int degrees, float speed_m, int disable) {
 
     speed_m = std::abs(speed_m);
 
-    while(std::abs(degrees - gyro->get_rotation()) > 3 || std::abs(averageMotorSpeed) > 1) {
+    while(std::abs(degrees - gyro->get_rotation()) > 4 || std::abs(averageMotorSpeed) > 1) {
         std::cout << std::abs(degrees - gyro->get_rotation()) << std::endl;
         double s = turnPid.calculate(degrees - gyro->get_rotation());
         if(std::abs(s) > 127)

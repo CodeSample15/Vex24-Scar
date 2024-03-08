@@ -29,7 +29,7 @@ pros::Controller master = pros::Controller(pros::E_CONTROLLER_MASTER);
     pros::Motor leftMotor3 = pros::Motor(LEFT_MOTOR_3_PORT, true);
     pros::Motor leftMotor4 = pros::Motor(LEFT_MOTOR_4_PORT);
 
-    pros::Motor RightSlapperMotor = pros::Motor(RIGHT_SLAPPER_MOTOR_PORT);
+    pros::Motor RightSlapperMotor = pros::Motor(RIGHT_SLAPPER_MOTOR_PORT, true);
     pros::Rotation RightSlapperSensor = pros::Rotation(RIGHT_SLAPPER_SENSOR_PORT);
 #endif
 

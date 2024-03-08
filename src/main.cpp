@@ -19,13 +19,14 @@
 	#include "autons/AWPRight_Red.cpp"
 	#include "autons/Skills_Red.cpp"
 	#include "autons/Bowl_Red.cpp"
+	#include "autons/Red_Match_Auton.cpp"
 #endif
 
 using namespace pros;
 
 bool initializing = false;
 bool selectingAuton = false;
-AutonSelector selector(1);
+AutonSelector selector;
 
 void print_debug() {
 	lcd::initialize();
@@ -42,6 +43,7 @@ void print_debug() {
 	#else
 		while(true) {
 			lcd::set_text(1, "Static imu: " + std::to_string(static_imu.get_rotation()));
+			lcd::set_text(2, "Left Slapper: " + std::to_string(LeftSlapperMotor.get_position()));
 
 			delay(10);
 
@@ -64,8 +66,8 @@ void select_auton_thread() {
 		selector.add("Skills");
 	#else
 		//red bot autons
-		selector.add("Skills");
-		selector.add("Supreme", "bowler");
+		selector.add("Kyle\'s", "match");
+		selector.add("Supreme", "bowler", "(skills)");
 		selector.add("AFK");
 	#endif
 
@@ -96,8 +98,11 @@ void initialize() {
 
 	LeftSlapperMotor.set_gearing(E_MOTOR_GEAR_200);
 	LeftSlapperMotor.set_brake_mode(E_MOTOR_BRAKE_BRAKE);
+
+	#if !ORANGE_BOT
 	RightSlapperMotor.set_gearing(E_MOTOR_GEAR_200);
 	RightSlapperMotor.set_brake_mode(E_MOTOR_BRAKE_BRAKE);
+	#endif
 
 	climbMotor.set_brake_mode(E_MOTOR_BRAKE_HOLD);
 	climbMotor.tare_position();
@@ -153,7 +158,7 @@ void autonomous() {
 	//red bot autons
 	switch(selector.getSelected()) {
 		case 0:
-			run_skills();
+			KyleMatchAuton();
 			break;
 
 		case 1:

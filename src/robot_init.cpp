@@ -46,7 +46,7 @@ pros::ADIDigitalOut rightBackWings = pros::ADIDigitalOut(RIGHT_BACK_WINGS_PORT);
 
 pros::Motor climbMotor = pros::Motor(CLIMB_MOTOR_PORT);
 
-pros::Motor LeftSlapperMotor = pros::Motor(LEFT_SLAPPER_MOTOR_PORT, true);
+pros::Motor LeftSlapperMotor = pros::Motor(LEFT_SLAPPER_MOTOR_PORT);
 pros::Rotation LeftSlapperSensor = pros::Rotation(LEFT_SLAPPER_SENSOR_PORT);
 
 #if ORANGE_BOT

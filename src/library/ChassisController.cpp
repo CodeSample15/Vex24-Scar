@@ -92,6 +92,8 @@ void Chassis::MovePid(double distance, float speed_m, float slewrate, bool inert
     double a_right = 0;
     double a_left = 0;
 
+    speed_m = std::abs(speed_m);
+
     if(inertialLock)
         gyro->tare();
 
@@ -129,6 +131,7 @@ void Chassis::Move(double distance, int speed, float slewrate, int timeout, bool
 
     double slew=0;
     int elapsedTime = 0;
+    speed = std::abs(speed);
 
     if(inertialLock)
         gyro->tare();
@@ -166,6 +169,8 @@ void Chassis::TurnPid(int degrees, float speed_m, int disable) {
     double a_right = 0;
     double a_left = 0;
 
+    speed_m = std::abs(speed_m);
+
     while(std::abs(degrees - gyro->get_rotation()) > 3 || std::abs(averageMotorSpeed) > 1) {
         std::cout << std::abs(degrees - gyro->get_rotation()) << std::endl;
         double s = turnPid.calculate(degrees - gyro->get_rotation());
@@ -190,6 +195,7 @@ void Chassis::TurnPid(int degrees, float speed_m, int disable) {
 
 void Chassis::Turn(int degrees, int speed, int disable) {
     gyro->tare_rotation();
+    speed = std::abs(speed);
 
     while(std::abs(gyro->get_rotation()) < std::abs(degrees)) {
         double s = speed * (degrees<0?-1:1);

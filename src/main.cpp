@@ -1,5 +1,5 @@
 #define KYLE_DRIVING false
-#define TESTING true //NEVER DOWNLOAD CODE WITH THIS SET TO TRUE. BLOCKS CODE FROM RUNNING TO RUN TEST CODE
+#define TESTING false //NEVER DOWNLOAD CODE WITH THIS SET TO TRUE. BLOCKS CODE FROM RUNNING TO RUN TEST CODE
 
 #include "main.h"
 #include "pros/misc.h"
@@ -18,13 +18,14 @@
 #else
 	#include "autons/AWPRight_Red.cpp"
 	#include "autons/Skills_Red.cpp"
+	#include "autons/Bowl_Red.cpp"
 #endif
 
 using namespace pros;
 
 bool initializing = false;
 bool selectingAuton = false;
-AutonSelector selector;
+AutonSelector selector(1);
 
 void print_debug() {
 	lcd::initialize();
@@ -64,9 +65,8 @@ void select_auton_thread() {
 	#else
 		//red bot autons
 		selector.add("Skills");
-		selector.add("AWP");
+		selector.add("Supreme", "bowler");
 		selector.add("AFK");
-		selector.add("Floor it", "(get to", "bar)");
 	#endif
 
 
@@ -157,7 +157,7 @@ void autonomous() {
 			break;
 
 		case 1:
-			runRightAwpAuton();
+			SupremeBowling();
 			break;
 
 		case 2:
@@ -165,12 +165,6 @@ void autonomous() {
 			startIntake(false); //drop intake
 			delay(1500); //wait
 			stopIntake(); //no need wasting that valuable battery juice
-			break;
-
-		case 3:
-			//run to other side
-			startIntake(false);
-			driveChassis.MovePid(1500, 1, 4, true);
 			break;
 
 		default:
@@ -187,14 +181,6 @@ void opcontrol() {
 		delay(3000);
 		imu.tare_rotation();
 		static_imu.tare();
-
-		driveChassis.left->set_brake_modes(E_MOTOR_BRAKE_BRAKE);
-		driveChassis.right->set_brake_modes(E_MOTOR_BRAKE_BRAKE);
-
-		driveChassis.MovePid(2000, 1, 7, true);
-		driveChassis.TurnPid(180, 0.9);
-		driveChassis.MovePid(2000, 1, 7, true);
-		driveChassis.TurnPid(180, 0.9);
 	}
 
 	bool frontWingsDeployed = false;

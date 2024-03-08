@@ -1,6 +1,8 @@
 #include "library/pid.h"
 #include "api.h"
 
+#include <iostream>
+
 //the robot will use the I term if the error is less than IMax, but greater than IMin
 PID::PID(double Kp, double Ki, double Kd, double dt, double IMax, double IMin, double MaxI)
 {
@@ -18,21 +20,22 @@ PID::PID(double Kp, double Ki, double Kd, double dt, double IMax, double IMin, d
 
 double PID::calculate(double error, bool delay)
 {
-    double p = error * PID::_Kp;
+    double p = error * _Kp;
 
-    if(std::abs(PID::_integral) > PID::_MaxI)
-        PID::_integral = PID::_MaxI * (PID::_integral<0 ? -1:1);
-    if(std::abs(error) > PID::_IMax || std::abs(error) < PID::_IMin)
-        PID::_integral = 0;
+    if(std::abs(error) > _IMax || std::abs(error) < _IMin)
+      _integral = 0;
     else
-        PID::_integral += error;
+      _integral += error;
 
-    double i = PID::_integral * PID::_Ki;
-    double d = error - PID::_prev_error;
-    PID::_prev_error = error;
+    if(std::abs(_integral) > _MaxI)
+        _integral = _MaxI * (_integral<0 ? -1:1);
+
+    double i = _integral * _Ki;
+    double d = error - _prev_error;
+    _prev_error = error;
 
     if(delay)
-      pros::delay(PID::_dt);
-
+      pros::delay(_dt);
+      
     return p + i + d;
 }

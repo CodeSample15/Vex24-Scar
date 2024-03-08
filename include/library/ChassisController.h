@@ -31,14 +31,14 @@ class Chassis {
         double getAverageRightPosition(bool rawEncoder);
         double getAverageLeftPosition(bool rawEncoder);
         double getAveragePosition(bool rawEncoder);
-    private:
-        PID pid;
-        PID turnPid;
-        drive_units unit;
 
         pros::Motor_Group* left;
         pros::Motor_Group* right;
         pros::Imu* gyro;
+    private:
+        PID pid;
+        PID turnPid;
+        drive_units unit;
 
         float wheelRadius;
 

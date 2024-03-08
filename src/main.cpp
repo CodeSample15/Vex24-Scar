@@ -1,5 +1,5 @@
 #define KYLE_DRIVING false
-#define TESTING false //NEVER DOWNLOAD CODE WITH THIS SET TO TRUE. BLOCKS CODE FROM RUNNING TO RUN TEST CODE
+#define TESTING true //NEVER DOWNLOAD CODE WITH THIS SET TO TRUE. BLOCKS CODE FROM RUNNING TO RUN TEST CODE
 
 #include "main.h"
 #include "pros/misc.h"
@@ -85,7 +85,6 @@ void select_auton_thread() {
 		if(master.get_digital_new_press(E_CONTROLLER_DIGITAL_UP)) {
 			selector.iterate();
 			updateScreen = true;
-			std::cout << "pressed" << std::endl;
 		}
 
 		delay(10);
@@ -189,8 +188,13 @@ void opcontrol() {
 		imu.tare_rotation();
 		static_imu.tare();
 
+		driveChassis.left->set_brake_modes(E_MOTOR_BRAKE_BRAKE);
+		driveChassis.right->set_brake_modes(E_MOTOR_BRAKE_BRAKE);
+
 		driveChassis.MovePid(2000, 1, 7, true);
-		driveChassis.MovePid(-2000, 1, 7, true);
+		driveChassis.TurnPid(180, 0.9);
+		driveChassis.MovePid(2000, 1, 7, true);
+		driveChassis.TurnPid(180, 0.9);
 	}
 
 	bool frontWingsDeployed = false;

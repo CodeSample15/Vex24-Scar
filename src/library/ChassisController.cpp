@@ -89,12 +89,20 @@ void Chassis::MovePid(double distance, float speed_m, float slewrate, bool inert
 
     double slew=0;
     double averageMotorSpeed = 99999;
+    double a_right = 0;
+    double a_left = 0;
+
     if(inertialLock)
         gyro->tare();
 
     while(std::abs(distance) > std::abs(getAveragePosition(true)) || std::abs(averageMotorSpeed)>1) {
-        double s = pid.calculate(distance-getAveragePosition(true), false) * speed_m;
-        double t = inertialLock ? turnPid.calculate(gyro->get_rotation(), false)*6 : 0;
+        double s = pid.calculate(distance-getAveragePosition(true));
+        double t = inertialLock ? turnPid.calculate(gyro->get_rotation(), false) : 0;
+
+        if(std::abs(s) > 127)
+            s = 127 * (s<0 ? -1 : 1);
+
+        s*=speed_m;
 
         if(std::abs(s) < 3)
             break; //too slow to move, just stop it, get some help
@@ -103,13 +111,13 @@ void Chassis::MovePid(double distance, float speed_m, float slewrate, bool inert
             s = slew;
             slew += slewrate * (distance<0 ? -1 : 1);
         }
-
+        
         right->move(s + t);
         left->move(s - t);
 
-        averageMotorSpeed = (average(right->get_actual_velocities()) + average(left->get_actual_velocities())) / 2;
-
-        pros::delay(20);
+        a_right = std::abs(average(right->get_actual_velocities()));
+        a_left = std::abs(average(left->get_actual_velocities()));
+        averageMotorSpeed = (a_right + a_left) / 2;
     }
 
     right->brake();
@@ -126,7 +134,6 @@ void Chassis::Move(double distance, int speed, float slewrate, int timeout, bool
         gyro->tare();
 
     while(distanceToEncoder(std::abs(distance)) > std::abs(getAveragePosition(true))) {
-        std::cout << distanceToEncoder(distance)-getAveragePosition(true) << std::endl;
         //handle timeout
         if(timeout != -1) {
             elapsedTime += 20;
@@ -136,7 +143,7 @@ void Chassis::Move(double distance, int speed, float slewrate, int timeout, bool
         }
 
         int s = speed * (distance<0?-1:1);
-        int t = inertialLock ? turnPid.calculate(gyro->get_rotation(), false)*6 : 0; 
+        int t = inertialLock ? turnPid.calculate(gyro->get_rotation(), false) : 0; 
 
         if(slewrate>0 && slew<s) {
             s = (int)slew;
@@ -156,19 +163,25 @@ void Chassis::Move(double distance, int speed, float slewrate, int timeout, bool
 void Chassis::TurnPid(int degrees, float speed_m, int disable) {
     gyro->tare_rotation();
     double averageMotorSpeed = 99999;
+    double a_right = 0;
+    double a_left = 0;
 
-    while(std::abs(degrees - gyro->get_rotation()) > 6 || std::abs(averageMotorSpeed) > 1) {
+    while(std::abs(degrees - gyro->get_rotation()) > 3 || std::abs(averageMotorSpeed) > 1) {
         std::cout << std::abs(degrees - gyro->get_rotation()) << std::endl;
-        double s = turnPid.calculate(degrees - gyro->get_rotation(), false) * speed_m;
+        double s = turnPid.calculate(degrees - gyro->get_rotation());
+        if(std::abs(s) > 127)
+            s = 127 * (s<0 ? -1 : 1);
+
+        s*=speed_m;
 
         if(disable != 1)
             right->move(-s);
         if(disable != 0)
             left->move(s);
 
-        averageMotorSpeed = average(right->get_actual_velocities());
-
-        pros::delay(20);
+        a_right = std::abs(average(right->get_actual_velocities()));
+        a_left = std::abs(average(left->get_actual_velocities()));
+        averageMotorSpeed = (a_right + a_left) / 2;
     }
 
     right->brake();

@@ -53,8 +53,8 @@ pros::Rotation LeftSlapperSensor = pros::Rotation(LEFT_SLAPPER_SENSOR_PORT);
     PID drivePid = PID(0.5, 0.02, 1.5, 20, 20, 3, 30);
     PID turnPid = PID(1.4, 0.06, 1.6, 20, 15, 1, 20);
 #else
-    PID drivePid = PID(0.5, 0.02, 1.5, 20, 20, 3, 30);
-    PID turnPid = PID(1.25, 0.02, 0.95, 20, 14, 2, 20);
+    PID drivePid = PID(0.3, 0.5, 1.6, 20, 100, 5, 20);
+    PID turnPid = PID(0.85, 0.7, 1.8, 15, 15, 1, 20);
 #endif
 
 Chassis driveChassis = Chassis(leftMotors, rightMotors, imu, drivePid, turnPid);

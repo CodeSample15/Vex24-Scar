@@ -16,7 +16,7 @@
 	#include "autons/Skills_Orange.cpp"
 	#include "autons/Bowl_Orange.cpp"
 #else
-	#include "autons/AWPRight_Red.cpp"
+	//#include "autons/AWPRight_Red.cpp"
 	#include "autons/Skills_Red.cpp"
 	#include "autons/Bowl_Red.cpp"
 	#include "autons/Red_Match_Auton.cpp"

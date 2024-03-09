@@ -106,9 +106,9 @@ void Chassis::MovePid(double distance, float speed_m, float slewrate, bool inert
 
         s*=speed_m;
 
-        if(std::abs(s) < 3)
-            break; //too slow to move, just stop it, get some help
-
+        if(std::abs(s) < MIN_MOTOR_SPEED)
+            s = MIN_MOTOR_SPEED * (s<0 ? -1 : 1);
+            
         if(slewrate>0 && std::abs(slew)<std::abs(s)) {
             s = slew;
             slew += slewrate * (distance<0 ? -1 : 1);
@@ -178,6 +178,9 @@ void Chassis::TurnPid(int degrees, float speed_m, int disable) {
             s = 127 * (s<0 ? -1 : 1);
 
         s*=speed_m;
+
+        if(std::abs(s) < MIN_MOTOR_SPEED)
+            s = MIN_MOTOR_SPEED * (s<0 ? -1 : 1);
 
         if(disable != 1)
             right->move(-s);

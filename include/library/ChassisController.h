@@ -1,5 +1,7 @@
 #pragma once
 
+#define MIN_MOTOR_SPEED 15
+
 #include "api.h"
 #include "pid.h"
 #include <vector>

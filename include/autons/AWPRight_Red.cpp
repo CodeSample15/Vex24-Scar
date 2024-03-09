@@ -2,62 +2,82 @@
 #include "robot.h"
 #include "autons/HelperMethods.h"
 
+
+inline void spinLeftSlapperToPosition(int pos, int speed) {
+    while(LeftSlapperMotor.get_position() < pos) {
+        LeftSlapperMotor.move(speed);
+        pros::delay(5);
+    }
+
+    LeftSlapperMotor.brake();
+
+    while(LeftSlapperMotor.get_position() > pos) {
+        LeftSlapperMotor.move(-20);
+        pros::delay(5);
+    }
+
+    LeftSlapperMotor.brake();
+}
 inline void runRightAwpAuton() {
-    static_imu.set_rotation(0);
 
-    rightMotors.set_brake_modes(pros::E_MOTOR_BRAKE_BRAKE);
-	leftMotors.set_brake_modes(pros::E_MOTOR_BRAKE_BRAKE);
-
-    //get out of legal starting size
-    startIntake();
-    pros::delay(1100);
-
-    //pick up triball under bar while moving forward
-    driveChassis.MovePid(2150, 0.6, 3, true);
-
-    //turn to the side
-    driveChassis.TurnPid(-90, 1);
-
-    //spit it out
-    startIntake(false);
-    driveChassis.MovePid(200, 1, 7, true);
-    stopIntake();
-    driveChassis.MovePid(-200, 1, 5, true);
-
-    //turn back towards the match load triball and move
-    driveChassis.TurnPid(85, 1);
-    driveChassis.MovePid(500, 1, 5, true);
-
-    //swing turn into place
-    driveChassis.TurnPid(-45, 2, 0);
-
-    //deploy wings
-    backWingsOut();
-
-    //scoop ball out
-    driveChassis.MovePid(500, 1, 4, true);
-    driveChassis.TurnPid(-65, 2, 0);
-    driveChassis.MovePid(600, 1, 3, true);
-
-    //move back
-    backWingsIn();
-    driveChassis.MovePid(-600, 1, 5, true);
-    driveChassis.TurnPid(30, 2);
-
-    //push triball in and move back out
-    //frontWingsOut();
-    driveChassis.Move(800, 127, 6, 3000);
-    driveChassis.MovePid(-400, 1, 4, true);
-    pros::delay(100);
-
-    //turn backwards and move towards bar
-    driveChassis.TurnPid(-5-static_imu.get_rotation(), 1.1); //realign to field
-    driveChassis.Move(-2200, 80, 3, -1);
     
-    //deploy wings
-    backWingsOut();
 
-    driveChassis.MovePid(-800, 1, -1, true);
-    driveChassis.Turn(30, 1, 1);
+    leftBackWingOut();
+    static_imu.set_rotation(-145);
+    
+    pros::delay(200);
+    LeftSlapperMotor.tare_position();
 
+    int times = 13;
+    PID p(1, 0, 0);
+    int endingPosition = 0;
+    for(int i=0; i<times; i++) {
+        spinLeftSlapperToPosition(300*(i+1), 127);
+        pros::delay(1500);
+
+        /*
+
+        
+        LeftSlapperMotor.tare_position();
+
+        
+        int error = 300;
+        while(abs(error) > 10 || LeftSlapperMotor.get_actual_velocity() < 10) {
+            error = 300 - LeftSlapperMotor.get_position();
+            double scale = -0.4;
+            if(error > 150){
+                scale = -0.8;
+            }
+            
+            LeftSlapperMotor.move_velocity(error * 0.4);
+            pros::delay(10);
+            pros::lcd::print(0, "Error: %d", error);
+
+        }
+
+        LeftSlapperMotor.move_velocity(0);
+        LeftSlapperMotor.brake();
+
+
+        if(i != times-1)
+            pros::delay(1000);*/
+    }
+
+    leftBackWingIn();
+
+    
+    driveChassis.MovePid(-650, 1, 3, true);
+    driveChassis.TurnPid(-180-static_imu.get_rotation(), 2);
+    rightBackWingOut();
+    pros::delay(300);
+    driveChassis.MovePid(-3500, 0.6, 3, true);
+    driveChassis.MovePid(-500, 0.5, 3, true);
+    rightBackWingIn();
+    leftBackWingOut();
+    pros::delay(300);
+    driveChassis.TurnPid(-210-static_imu.get_rotation(), 2);
+    driveChassis.MovePid(-1000, 1, 3, true);
+    driveChassis.TurnPid(-270-static_imu.get_rotation(), 2);
+    driveChassis.MovePid(-1000, 1, 3, true);
+    
 }

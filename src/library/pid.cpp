@@ -28,7 +28,7 @@ double PID::calculate(double error, bool delay)
       _integral += error;
 
     if(std::abs(_integral) > _MaxI)
-        _integral = _MaxI * (_integral<0 ? -1:1);
+        _integral = _MaxI * (_integral<0 ? -1:1) * (_dt / 1000);
 
     double i = _integral * _Ki;
     double d = error - _prev_error;
